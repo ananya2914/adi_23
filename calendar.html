@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>One Year of Love - Daily Notes</title>
+    <link rel="stylesheet" href="/src/styles.css">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: linear-gradient(135deg, #ffeef8 0%, #fff5e6 100%);
+        min-height: 100vh;
+        padding: 20px;
+        font-family: 'Georgia', serif;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .header h1 {
+        color: #ff69b4;
+        font-size: 32px;
+        margin-bottom: 10px;
+      }
+
+      .header p {
+        color: #ff8fab;
+        font-size: 16px;
+      }
+
+      .calendar-grid {
+        display: grid;
+        gap: 24px;
+        margin-bottom: 30px;
+      }
+
+      .month-section {
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: 0 8px 24px rgba(255, 105, 180, 0.08);
+      }
+
+      .month-title {
+        color: #ff69b4;
+        font-size: 22px;
+        margin-bottom: 12px;
+        text-align: center;
+        letter-spacing: 0.5px;
+      }
+
+      .weekday-row {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .weekday-cell {
+        text-align: center;
+        font-size: 12px;
+        font-weight: bold;
+        color: #ff8fab;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+
+      .month-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .day-card {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid #fff;
+        position: relative;
+        min-height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .empty-cell {
+        background: transparent;
+        border-radius: 10px;
+        min-height: 100px;
+      }
+
+      .day-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(255, 105, 180, 0.2);
+        border-color: #ffb6d9;
+      }
+
+      .day-card.has-content {
+        background: linear-gradient(135deg, #fff0f7 0%, #fffaf0 100%);
+        border-color: #ff69b4;
+      }
+
+      .day-number {
+        font-size: 24px;
+        font-weight: bold;
+        color: #ff69b4;
+        margin-bottom: 5px;
+      }
+
+      .day-label {
+        font-size: 12px;
+        color: #999;
+        text-transform: uppercase;
+      }
+
+      .content-indicator {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        font-size: 16px;
+      }
+
+      /* Modal */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 600px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #ffb6d9;
+        padding-bottom: 15px;
+      }
+
+      .modal-header h2 {
+        color: #ff69b4;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 28px;
+        cursor: pointer;
+        color: #ff69b4;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        color: #ff69b4;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+
+      .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ffb6d9;
+        border-radius: 8px;
+        font-family: inherit;
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #ff69b4;
+        box-shadow: 0 0 10px rgba(255, 105, 180, 0.2);
+      }
+
+      .image-upload {
+        border: 2px dashed #ffb6d9;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .image-upload:hover {
+        background: #fff0f7;
+        border-color: #ff69b4;
+      }
+
+      .image-upload input {
+        display: none;
+      }
+
+      .image-preview {
+        margin-top: 15px;
+        text-align: center;
+      }
+
+      .image-preview img {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 8px;
+        margin-top: 10px;
+      }
+
+      .remove-image-btn {
+        background: #ff6b6b;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      .remove-image-btn:hover {
+        background: #ff5252;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .btn-save {
+        flex: 1;
+        padding: 12px;
+        background: linear-gradient(135deg, #ff69b4, #ff8fab);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s;
+      }
+
+      .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(255, 105, 180, 0.3);
+      }
+
+      .btn-cancel {
+        flex: 1;
+        padding: 12px;
+        background: #ccc;
+        color: #333;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .btn-cancel:hover {
+        background: #bbb;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #ff69b4;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+
+      .auth-panel {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .auth-panel label {
+        font-size: 12px;
+        color: #ff69b4;
+        font-weight: bold;
+      }
+
+      .auth-panel input {
+        width: 100%;
+        padding: 8px 10px;
+        border: 2px solid #ffb6d9;
+        border-radius: 8px;
+        font-family: inherit;
+      }
+
+      .auth-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .auth-status {
+        font-size: 13px;
+        color: #666;
+      }
+
+      .btn-small {
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        background: #ff8fab;
+        color: white;
+        font-weight: bold;
+      }
+
+      .btn-outline {
+        background: white;
+        color: #ff69b4;
+        border: 2px solid #ffb6d9;
+      }
+
+      @media (max-width: 768px) {
+        .auth-panel {
+          grid-template-columns: 1fr;
+        }
+
+        .day-card {
+          padding: 10px;
+          min-height: 80px;
+        }
+
+        .day-number {
+          font-size: 18px;
+        }
+
+        .empty-cell {
+          min-height: 80px;
+        }
+
+        .modal-content {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="/" class="back-link">← Back to Countdown</a>
+
+      <div class="header">
+        <h1>💕 One Year of Love</h1>
+        <p>........</p>
+      </div>
+
+      <div class="auth-panel">
+        <div>
+          <label for="authEmail">Email</label>
+          <input id="authEmail" type="email" placeholder="you@example.com" />
+        </div>
+        <div>
+          <label for="authPassword">Password</label>
+          <input id="authPassword" type="password" placeholder="••••••••" />
+        </div>
+        <div class="auth-actions">
+          <button class="btn-small" onclick="signUp()">Sign Up</button>
+          <button class="btn-small" onclick="signIn()">Sign In</button>
+          <button class="btn-small btn-outline" onclick="signOut()">Sign Out</button>
+        </div>
+        <div class="auth-status" id="authStatus">Not signed in</div>
+      </div>
+
+      <div class="calendar-grid" id="calendar-grid"></div>
+    </div>
+
+    <!-- Modal for day details -->
+    <div class="modal" id="dayModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalDate"></h2>
+          <button class="close-btn" onclick="closeDayModal()">&times;</button>
+        </div>
+
+        <div class="form-group">
+          <label>Today's Note:</label>
+          <div id="dayNote" style="color:#444; font-size:16px; line-height:1.6;"></div>
+        </div>
+
+        <div class="form-group">
+          <label>Photo Memory:</label>
+          <div class="image-upload" onclick="document.getElementById('imageInput').click()">
+            <p>Click to upload a photo 📸</p>
+            <input type="file" id="imageInput" accept="image/*">
+          </div>
+          <div class="image-preview" id="imagePreview"></div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-save" onclick="uploadDayPhoto()">Save Photo</button>
+          <button class="btn-cancel" onclick="closeDayModal()">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      const SUPABASE_URL = 'https://cxmvgrufsjygcznrurxn.supabase.co';
+      const SUPABASE_ANON_KEY = 'sb_publishable_hdqtKwY2v11IMNut_V9ncg_2qE1BCLb';
+
+      let currentDay = null;
+      let currentUser = null;
+      let currentFile = null;
+      let supabaseClient = null;
+      
+      const loveNotes = [
+        "You make ordinary days feel like magic. 💖",
+        "Today I’m grateful for your smile and your softness.",
+        "You are my favorite place to be.",
+        "Thinking about you makes my heart do a happy dance.",
+        "I love the way you love me—so gently, so fully.",
+        "You’re my sunshine on the cloudiest days.",
+        "Every day with you is a page from my favorite story.",
+        "I’m proud of you and all the little things you do.",
+        "You are my calm, my spark, my home.",
+        "I’d choose you in every lifetime.",
+        "Your laugh is my favorite sound.",
+        "I love you more than coffee, and that’s serious.",
+        "You make my heart feel safe.",
+        "Thank you for being you—always.",
+        "You’re the sweetest part of my day.",
+        "I love the way your eyes look when you’re happy.",
+        "You’re my best friend and my biggest crush.",
+        "You make my world softer and brighter.",
+        "You are my favorite “hello” and hardest “goodbye.”",
+        "Your hugs fix everything.",
+        "You’re the reason I believe in love.",
+        "I’m cheering for you today and always.",
+        "You’re my favorite adventure.",
+        "You’re my heart’s safest home.",
+        "I love the little ways you care.",
+        "You make me feel so loved.",
+        "I’m lucky—because I have you.",
+        "You are the sweetest surprise life gave me.",
+        "I love how you make me laugh.",
+        "You + me = my favorite forever."
+      ];
+
+      function initSupabase() {
+        const { createClient } = supabase;
+        supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        supabaseClient.auth.getSession().then(({ data }) => {
+          currentUser = data.session?.user || null;
+          updateAuthStatus();
+        });
+
+        supabaseClient.auth.onAuthStateChange((_event, session) => {
+          currentUser = session?.user || null;
+          updateAuthStatus();
+        });
+      }
+
+      function updateAuthStatus() {
+        const status = document.getElementById('authStatus');
+        if (currentUser) {
+          status.textContent = `Signed in as ${currentUser.email}`;
+        } else {
+          status.textContent = 'Not signed in';
+        }
+      }
+
+      async function signUp() {
+        const email = document.getElementById('authEmail').value.trim();
+        const password = document.getElementById('authPassword').value.trim();
+        if (!email || !password) return;
+        const { error } = await supabaseClient.auth.signUp({ email, password });
+        if (error) alert(error.message);
+        else alert('Check your email to confirm your account.');
+      }
+
+      async function signIn() {
+        const email = document.getElementById('authEmail').value.trim();
+        const password = document.getElementById('authPassword').value.trim();
+        if (!email || !password) return;
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) alert(error.message);
+      }
+
+      async function signOut() {
+        await supabaseClient.auth.signOut();
+      }
+
+      function getObjectPath(dayIndex) {
+        return `${currentUser.id}/day-${dayIndex}`;
+      }
+
+      // Generate calendar from February 15, 2026 for 365 days
+      function generateCalendar() {
+        const grid = document.getElementById('calendar-grid');
+        grid.innerHTML = '';
+        
+        const startDate = new Date(2026, 1, 15);
+        const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        let currentMonth = -1;
+        let monthGrid = null;
+        
+        const totalDays = 365;
+        
+        for (let i = 0; i < totalDays; i++) {
+          const date = new Date(startDate);
+          date.setDate(startDate.getDate() + i);
+          
+          if (date.getMonth() !== currentMonth) {
+            currentMonth = date.getMonth();
+            
+            const monthSection = document.createElement('div');
+            monthSection.className = 'month-section';
+            
+            const monthTitle = document.createElement('div');
+            monthTitle.className = 'month-title';
+            monthTitle.textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            
+            const weekdayRow = document.createElement('div');
+            weekdayRow.className = 'weekday-row';
+            
+            weekdayLabels.forEach(label => {
+              const weekdayCell = document.createElement('div');
+              weekdayCell.className = 'weekday-cell';
+              weekdayCell.textContent = label;
+              weekdayRow.appendChild(weekdayCell);
+            });
+            
+            monthGrid = document.createElement('div');
+            monthGrid.className = 'month-grid';
+            
+            const offset = date.getDay();
+            for (let j = 0; j < offset; j++) {
+              const emptyCell = document.createElement('div');
+              emptyCell.className = 'empty-cell';
+              monthGrid.appendChild(emptyCell);
+            }
+            
+            monthSection.appendChild(monthTitle);
+            monthSection.appendChild(weekdayRow);
+            monthSection.appendChild(monthGrid);
+            grid.appendChild(monthSection);
+          }
+          
+          const dayCard = document.createElement('div');
+          dayCard.className = 'day-card';
+          dayCard.onclick = () => openDayModal(i, date);
+          
+          const dayNum = document.createElement('div');
+          dayNum.className = 'day-number';
+          dayNum.textContent = date.getDate();
+          
+          const dayLabel = document.createElement('div');
+          dayLabel.className = 'day-label';
+          dayLabel.textContent = date.toLocaleDateString('en-US', { weekday: 'short' });
+          
+          const indicator = document.createElement('div');
+          indicator.className = 'content-indicator';
+          indicator.textContent = '💌';
+          indicator.id = `indicator-${i}`;
+          
+          dayCard.appendChild(indicator);
+          dayCard.appendChild(dayNum);
+          dayCard.appendChild(dayLabel);
+          dayCard.id = `day-${i}`;
+          
+          monthGrid.appendChild(dayCard);
+        }
+      }
+
+      // Open modal for a specific day
+      async function openDayModal(dayIndex, date) {
+        currentDay = dayIndex;
+        document.getElementById('modalDate').textContent = `Day ${dayIndex + 1} - ${date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+        const note = loveNotes[dayIndex % loveNotes.length];
+        document.getElementById('dayNote').textContent = note;
+        document.getElementById('imagePreview').innerHTML = '';
+        document.getElementById('imageInput').value = '';
+        currentFile = null;
+
+        if (currentUser) {
+          const objectPath = getObjectPath(dayIndex);
+          const { data, error } = await supabaseClient.storage
+            .from('daily-photos')
+            .createSignedUrl(objectPath, 60 * 60);
+
+          if (!error && data?.signedUrl) {
+            showImagePreview(data.signedUrl);
+          }
+        }
+        
+        document.getElementById('dayModal').classList.add('active');
+      }
+
+      // Close modal
+      function closeDayModal() {
+        document.getElementById('dayModal').classList.remove('active');
+        currentDay = null;
+      }
+
+      document.getElementById('imageInput').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          currentFile = file;
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            showImagePreview(event.target.result);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      function showImagePreview(src) {
+        const preview = document.getElementById('imagePreview');
+        preview.innerHTML = `<img src="${src}" alt="Preview">`;
+      }
+
+      async function uploadDayPhoto() {
+        if (!currentUser) {
+          alert('Please sign in first.');
+          return;
+        }
+        if (!currentFile) {
+          alert('Choose a photo to upload.');
+          return;
+        }
+
+        const objectPath = getObjectPath(currentDay);
+        const { error } = await supabaseClient.storage
+          .from('daily-photos')
+          .upload(objectPath, currentFile, {
+            cacheControl: '3600',
+            upsert: true,
+            contentType: currentFile.type
+          });
+
+        if (error) {
+          alert(error.message);
+          return;
+        }
+
+        const indicator = document.getElementById(`indicator-${currentDay}`);
+        if (indicator) indicator.textContent = '📸';
+
+        alert('Photo saved!');
+      }
+
+      // Initialize when page loads
+      window.addEventListener('load', () => {
+        initSupabase();
+        generateCalendar();
+      });
+    </script>
+  </body>
+</html>

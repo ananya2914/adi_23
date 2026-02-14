@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Love Letter for ADI</title>
+    <link rel="stylesheet" href="/src/styles.css">
+    <style>
+      body {
+        background: linear-gradient(135deg, #ffeef8 0%, #fff5e6 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        font-family: 'Georgia', serif;
+      }
+
+      .letter-container {
+        max-width: 600px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 15px 50px rgba(255, 105, 180, 0.2);
+        padding: 50px;
+        position: relative;
+        animation: slideIn 0.8s ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .letter-container::before {
+        content: '💌';
+        font-size: 60px;
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .letter-header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #ffb6d9;
+        padding-bottom: 20px;
+      }
+
+      .letter-header h1 {
+        color: #ff69b4;
+        font-size: 28px;
+        margin: 0;
+        margin-bottom: 5px;
+      }
+
+      .letter-header p {
+        color: #ff8fab;
+        font-style: italic;
+        margin: 0;
+      }
+
+      .letter-content {
+        line-height: 1.8;
+        color: #333;
+        font-size: 16px;
+        text-align: justify;
+      }
+
+      .letter-content p {
+        margin-bottom: 15px;
+      }
+
+      .signature {
+        margin-top: 30px;
+        text-align: right;
+        font-style: italic;
+        color: #ff69b4;
+      }
+
+      .hearts {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 20px;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+      }
+
+      .back-btn {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #ff69b4, #ff8fab);
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .back-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(255, 105, 180, 0.3);
+      }
+
+      .back-btn:active {
+        transform: translateY(0);
+      }
+
+      .decorative {
+        opacity: 0.1;
+        position: absolute;
+        font-size: 80px;
+        pointer-events: none;
+      }
+
+      .dec1 {
+        top: 20px;
+        left: -30px;
+        animation: rotate 20s linear infinite;
+      }
+
+      .dec2 {
+        bottom: 30px;
+        right: -40px;
+        animation: rotate 25s linear infinite reverse;
+      }
+
+      @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+      .floating-hearts {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .heart {
+        position: absolute;
+        font-size: 30px;
+        opacity: 0.4;
+        animation: rise 8s infinite;
+      }
+
+      @keyframes rise {
+        0% {
+          opacity: 0.8;
+          transform: translateY(100vh) rotate(0deg);
+        }
+        50% {
+          opacity: 0.6;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-100vh) rotate(360deg);
+        }
+      }
+
+      .heart:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
+      .heart:nth-child(2) { left: 20%; animation-duration: 10s; animation-delay: 1s; }
+      .heart:nth-child(3) { left: 30%; animation-duration: 9s; animation-delay: 2s; }
+      .heart:nth-child(4) { left: 40%; animation-duration: 11s; animation-delay: 0.5s; }
+      .heart:nth-child(5) { left: 50%; animation-duration: 8.5s; animation-delay: 1.5s; }
+      .heart:nth-child(6) { left: 60%; animation-duration: 10.5s; animation-delay: 0.2s; }
+      .heart:nth-child(7) { left: 70%; animation-duration: 9.5s; animation-delay: 2.5s; }
+      .heart:nth-child(8) { left: 80%; animation-duration: 11.5s; animation-delay: 1s; }
+      .heart:nth-child(9) { left: 90%; animation-duration: 8.8s; animation-delay: 0.8s; }
+      .heart:nth-child(10) { left: 15%; animation-duration: 10.2s; animation-delay: 2.2s; }
+      .heart:nth-child(11) { left: 25%; animation-duration: 9.2s; animation-delay: 0.3s; }
+      .heart:nth-child(12) { left: 35%; animation-duration: 10.8s; animation-delay: 1.8s; }
+      .heart:nth-child(13) { left: 45%; animation-duration: 8.3s; animation-delay: 2.1s; }
+      .heart:nth-child(14) { left: 55%; animation-duration: 11.2s; animation-delay: 0.7s; }
+      .heart:nth-child(15) { left: 65%; animation-duration: 9.7s; animation-delay: 1.4s; }
+      .heart:nth-child(16) { left: 75%; animation-duration: 10.5s; animation-delay: 2.3s; }
+      .heart:nth-child(17) { left: 85%; animation-duration: 8.9s; animation-delay: 0.9s; }
+      .heart:nth-child(18) { left: 12%; animation-duration: 10.3s; animation-delay: 1.2s; }
+      .heart:nth-child(19) { left: 38%; animation-duration: 9.4s; animation-delay: 2.6s; }
+      .heart:nth-child(20) { left: 68%; animation-duration: 11.1s; animation-delay: 0.4s; }
+    </style>
+  </head>
+  <body>
+    <div class="floating-hearts" id="floating-hearts"></div>
+    <div class="decorative dec1">🌹</div>
+    <div class="decorative dec2">💐</div>
+
+    <div class="letter-container">
+      <div class="letter-header">
+        <h1>For my love</h1>
+        <p>February 15, 2026</p>
+      </div>
+
+      <div class="letter-content">
+        <p>My  ADI,</p>
+
+        <p>I wanted to write this down today because some feelings are too big for just words, but I'm going to try anyway. On this special day, as you turn 23, I want you to know how much you mean to me.</p>
+
+        <p>Youve been my constant companion, my best friend, and my greatest source of joy. You have made me feel so much in so little time. </p>
+
+        <p>I wish you all the happiness in the world. May your birthday be filled with laughter, love, and all the things that make you smile. Thank you for being such an amazing friend to me. I will always be grateful for you and everything you do for me. </p>
+
+
+        <p>Thank you for being exactly who you are. Thank you for the memories we've created, the dreams we share, and for choosing to build this beautiful life with me. You make everything better, brighter, and more meaningful.</p>
+
+        <p>I dont need it to be your birthday to make me feel this way. You are my special boy every day, and youll always be. No matter what happens, you are always in my heart. </p>
+        <p>I will always look for you in every room, and my eyes will always find you. You are my home.</p>
+        <p>Happy Birthday my boy. 🎂💕</p>
+
+        <div class="signature">
+          <p>Forever yours,<br>❤️</p>
+        </div>
+      </div>
+
+      <div class="hearts">💕 💖 💗 💓 💞</div>
+
+      <div style="text-align: center;">
+        <button class="back-btn" onclick="window.location.href='/'">← Back to Countdown</button>
+      </div>
+    </div>
+
+    <script>
+      // Generate floating hearts
+      const floatingHeartsContainer = document.getElementById('floating-hearts');
+      const heartEmojis = ['💕', '💖', '💗', '💓', '💞', '❤️', '💝'];
+
+      for (let i = 0; i < 20; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+        floatingHeartsContainer.appendChild(heart);
+      }
+
+      // Regenerate hearts when animation ends
+      floatingHeartsContainer.addEventListener('animationend', (e) => {
+        if (e.target.className === 'heart') {
+          e.target.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+        }
+      }, true);
+    </script>
+  </body>
+</html>

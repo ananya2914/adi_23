@@ -22,6 +22,8 @@ app.innerHTML = `
 
   <div style="text-align:center">
     <button id="celebrateBtn" class="btn">Celebrate!</button>
+    <a href="/love-letter.html" class="btn" style="display:inline-block; margin-left:10px; text-decoration:none;">💌 Love Letter</a>
+    <a href="/calendar.html" class="btn" style="display:inline-block; margin-left:10px; text-decoration:none;">📅 365 Days</a>
   </div>
 
   <div class="balloon b1">🎈</div>
